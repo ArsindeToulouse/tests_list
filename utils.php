@@ -152,6 +152,31 @@ function jsonObjToArray($obj){
 
 	return $arr;
 }
+function getArrayOfKeyFromJSONObject($obj){
+	$arr = array();
+	foreach ($obj as $key => $value) {
+		$arr[] = $key;
+	}
+
+	return $arr;
+}
+function keyCompare($key1, $key2)
+{
+    if ($key1 == $key2)
+        return 0;
+    else if ($key1 > $key2)
+        return 1;
+    else
+        return -1;
+}
+function checkKeyOfArray($arr){
+	$keys = ['question', 'choice', 'answer'];
+
+	if (count($arr) !== 3) {
+		return false;
+	}
+	return empty(array_diff_ukey($arr, $keys, 'keyCompare')) ? true : false;
+}
 //Функция проверяет login и password пользователя на соответствие
 function checkUserLogin($arr){
 	return ($arr['login'] === $_POST['login'] && $arr['password'] === $_POST['password']) ? $_SESSION['login'] = $arr['login'] : null;
@@ -172,6 +197,18 @@ function isUser(){
 
 function isGuest(){
 	return isset($_COOKIE['guest']);
+}
+
+function testJSONStructure($tmp_file){
+	$json = getJSON($tmp_file);
+	if($json && is_array($json)){
+		$keys = getArrayOfKeyFromJSONObject($json[0]);
+		if ($keys) {
+			return checkKeyOfArray($keys) ? true : false;
+		}
+	} else {
+		return false;
+	}
 }
 // Структурированный вывод массива или объекта
 function printDump($tmp){
